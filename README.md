@@ -1,4 +1,4 @@
-# messenger-bot
+# Crystal API for Facebook's Messenger API
 
 Messenger bot API for [Crystal](http://crystal-lang.org/).
 
