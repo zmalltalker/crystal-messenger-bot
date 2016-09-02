@@ -1,6 +1,6 @@
 # messenger-bot
 
-Messenger bot API for Crystal.
+Messenger bot API for [Crystal](http://crystal-lang.org/).
 
 ## Installation
 
@@ -16,11 +16,13 @@ dependencies:
 
 ## Usage
 
+### Setting up the Messenger API
 
-```crystal
-require "messenger-bot"
-```
-
+This is going to be the most time consuming task. Generally just
+follow the instructions on
+[the Facebook developer site](https://developers.facebook.com/docs/messenger-platform/quickstart)
+to set up a page and app. You should end up with an access token,
+which you'll need to actually deliver messages through Messenger.
 
 There's an API for building message payloads for Messenger messages, and an API for sending them.
 Let's say you know the id of a recipient and you have an access token
@@ -40,7 +42,11 @@ puts "Delivered message #{message_id} to recipient #{recipient_id}"
 
 ## Development
 
-TODO: Write development instructions here
+The `spec/` directory contains some tests for building and sending
+messages. Right now only text type messages are supported, but I plan
+on adding support for richer messages to.
+
+This is my first Crystal project, so consider yourself warned.
 
 ## Contributing
 
