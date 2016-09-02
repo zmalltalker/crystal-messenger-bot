@@ -2,9 +2,9 @@ require "json"
 module Messenger::Bot
   class RecipientPayload
     JSON.mapping({
-                   recipient_id: {type: Int32, key: "id"}
+                   recipient_id: {type: Int64, key: "id"}
                  })
-    def initialize(@recipient_id : Int32)
+    def initialize(@recipient_id : Int64)
     end
   end
 
