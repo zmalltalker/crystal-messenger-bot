@@ -29,6 +29,12 @@ Let's say you know the id of a recipient and you have an access token
 for Messenger, here's how you would go about sending a text message to
 her
 
+### Building and sending messages
+
+Assuming you have an access token and a recipient ID, you can send a
+message through Messenger like this:
+
+
 ```crystal
 require "messenger-bot"
 access_token = "REALLY_LONG_STRING_HERE"
@@ -47,6 +53,12 @@ messages. Right now only text type messages are supported, but I plan
 on adding support for richer messages to.
 
 This is my first Crystal project, so consider yourself warned.
+
+If time (and interest) allows it, I'm planning to add support for
+parsing incoming messages as well. This way I hope to make it possible
+to build webhooks to interact with users sending you messages
+too. Once this is ready you should not have any problems getting hold
+of a recipient id to play with :-)
 
 ## Contributing
 
