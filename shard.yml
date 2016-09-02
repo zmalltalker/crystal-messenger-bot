@@ -1,0 +1,12 @@
+name: messenger-bot
+version: 0.1.0
+
+authors:
+  - Marius Mathiesen <marius@shortcut.no>
+
+license: MIT
+
+development_dependencies:
+  webmock:
+    github: manastech/webmock.cr
+    branch: master
