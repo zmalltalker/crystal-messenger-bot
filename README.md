@@ -46,6 +46,40 @@ puts "Delivered message #{message_id} to recipient #{recipient_id}"
 
 ```
 
+### Building a message with buttons
+
+In addition to supporting plain text messages, this library supports
+adding buttons into messages. There are two types of buttons that can
+be added:
+
+* Web links, created with `Messenger::Bot::Link.create(title : String,
+url : String)
+* Callback links, with a payload that can call back into your app with
+  a payload. Created with `Messenger::Bot::Link.create(title : String,
+  callback : String)
+
+Example:
+```crystal
+require "messenger-bot"
+access_token = "REALLY_LONG_STRING_HERE"
+recipient_id = 12390123112312
+
+url_link = Messenger::Bot::Link.create("Read on", url:
+"https://zmalltalker.com")
+callback_link = Messenger::Bot::Link.create("See more", callback:
+"state returned into your bot")
+
+message =
+Messenger::Bot::Builder.new.build_message_with_buttons(recipient_id,
+"Hey Marius. I think you're a really nice guy.", [url_link, callback_link])
+
+api = Messenger::Bot::GraphAPI.new("2.6", access_token)
+recipient_id, message_id = api.deliver_message(message)
+puts "Delivered message with buttons as message #{message_id} to recipient #{recipient_id}"
+
+```
+
+
 ## Development
 
 The `spec/` directory contains some tests for building and sending
