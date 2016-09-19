@@ -76,9 +76,9 @@ Messenger::Bot::Builder.new.build_message_with_buttons(recipient_id,
 api = Messenger::Bot::GraphAPI.new("2.6", access_token)
 recipient_id, message_id = api.deliver_message(message)
 puts "Delivered message with buttons as message #{message_id} to recipient #{recipient_id}"
-
 ```
 
+To build messages, see `Messenger::Bot::Builder#build_text_message`
 
 ## Development
 
