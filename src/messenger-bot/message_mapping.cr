@@ -1,10 +1,10 @@
 require "json"
-module Messenger::Bot
 
+module Messenger::Bot
   class GraphResponseMessage
     JSON.mapping({
-                   recipient_id: String,
-                   message_id: String
-                 })
+      recipient_id: String,
+      message_id:   String,
+    })
   end
 end
