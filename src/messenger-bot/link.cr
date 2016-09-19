@@ -2,7 +2,13 @@ require "json"
 
 module Messenger
   module Bot
+    # Represent links to be embedded in messages
     class Link
+
+      # Create a Link with *title* and either *url* or *callback*
+      # Both will be displayed as links in messenger with *title* as link text,
+      # but links with *callback* will link back to the both with this payload while
+      # links with *url*  will link to a website.
       def self.create(title : String, url : String = nil, callback : String = nil)
         if url
           URLLink.new(title, url)
@@ -13,11 +19,13 @@ module Messenger
         end
       end
 
+      # :nodoc:
       def to_json_string
         raise "Not implemented"
       end
     end
 
+    # :nodoc:
     class URLLink < Link
       getter :title, :url
 
@@ -29,6 +37,7 @@ module Messenger
       end
     end
 
+    # :nodoc:
     class CallbackLink < Link
       getter :title, :callback
 

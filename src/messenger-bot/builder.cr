@@ -1,6 +1,7 @@
 module Messenger
   module Bot
     # Build messages to be sent to Messenger users
+    # Send the resulting messages using `Messenger::Bot::GraphAPI`
     class Builder
       # Build a text message payload which can be delivered through the Messenger, aka Graph, API
       # Build a text message to user with id *recipient_id* with the text *message_text*
