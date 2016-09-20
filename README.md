@@ -80,6 +80,36 @@ puts "Delivered message with buttons as message #{message_id} to recipient #{rec
 
 To build messages, see `Messenger::Bot::Builder#build_text_message`
 
+## Incoming message thoughts
+
+Work In Progress: Have a look at
+`Messenger::Bot::IncomingMessageParser` in the meantime.
+
+Create a Factory (in lack of a better name), which takes an incoming
+JSON document and returns an IncomingMessage, with a sender id,
+message text and optional quick reply.
+
+The IncomingMessage may have attachments, either:
+* FileAttachment
+* Location (lat,lng)
+
+Idea: the factory could either return an IncomingMessage or a Postback
+object with a payload.
+
+Next, to add handlers in your app, use the supplied type to perform
+proper actions.
+
+```crystal
+class MyApp
+def process(message : TextMessage)
+# do stuff with a text message
+end
+
+def process(message : Postback)
+# do stuff with a postback message
+end
+```
+
 ## Development
 
 The `spec/` directory contains some tests for building and sending
