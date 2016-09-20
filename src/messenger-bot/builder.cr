@@ -28,7 +28,25 @@ module Messenger
                 }
             }
         })
-      end
+          end
+
+          # Build a message to user *recipient_id* with message text *message* and a prompt
+          # for the current user's location
+          def build_message_with_location_prompt(recipient_id : Int64, message : String)
+            %({
+                "recipient":{
+                               "id":"#{recipient_id}"
+                             },
+               "message":{
+                            "text":"#{message}",
+                          "quick_replies":[
+                                             {"content_type":"location"}
+                                           ]
+                          }
+              }
+             )
+          end
+
     end
   end
 end

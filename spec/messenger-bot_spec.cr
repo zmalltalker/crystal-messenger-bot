@@ -33,4 +33,12 @@ describe Messenger::Bot do
     first_button = obj["message"]["attachment"]["payload"]["buttons"][0]
     first_button["payload"].should eq("hullo")
   end
+
+  it "builds a message with a location prompt" do
+    payload = Messenger::Bot::Builder.new.build_message_with_location_prompt(42_000_000_000, "I need to know your whereabouts, pardner")
+
+    obj = JSON.parse(payload)
+    obj["message"]["text"].should eq("I need to know your whereabouts, pardner")
+    obj["message"]["quick_replies"][0]["content_type"].should eq("location")
+  end
 end
