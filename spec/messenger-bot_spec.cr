@@ -2,16 +2,20 @@ require "./spec_helper"
 
 describe Messenger::Bot do
   it "builds a message" do
-    builder = Messenger::Bot::Builder.new
     recipient_id = 420_000_000_000
-    result_text = builder.build_text_message(recipient_id, "Whoa")
+
+    builder = Messenger::Bot::Builder.new(recipient_id)
+#    result_text = builder.build_text_message(recipient_id, "Whoa")
+    builder.add_text("Whoa")
+
+    result_text = builder.build
     json_object = JSON.parse(result_text)
     json_object["recipient"]["id"].should eq(recipient_id)
     json_object["message"]["text"].should eq("Whoa")
   end
 
   it "delivers a message to Messenger's API" do
-    message = Messenger::Bot::Builder.new.build_text_message(42_000_000_000, "Hullo there")
+    message = Messenger::Bot::Builder.new(42_000_000_000).add_text("Hullo there").build
     access_token = "sikret"
     api = Messenger::Bot::GraphAPI.new("2.6", access_token)
     WebMock.stub(:post, "https://graph.facebook.com/v2.6/me/messages?access_token=#{access_token}").
@@ -27,7 +31,7 @@ describe Messenger::Bot do
     first_link = Messenger::Bot::Link.create("Read on", callback: "hullo")
     first_link.callback.should eq("hullo")
     second_link = Messenger::Bot::Link.create("Facebook", url: "https://facebook.com")
-    result = Messenger::Bot::Builder.new.build_message_with_buttons(42_000_000_000, "Whatever", [first_link, second_link])
+    result = Messenger::Bot::Builder.new(42_000_000_000).build_message_with_buttons("Whatever", [first_link, second_link])
 
     obj = JSON.parse(result)
     first_button = obj["message"]["attachment"]["payload"]["buttons"][0]
@@ -35,7 +39,7 @@ describe Messenger::Bot do
   end
 
   it "builds a message with a location prompt" do
-    payload = Messenger::Bot::Builder.new.build_message_with_location_prompt(42_000_000_000, "I need to know your whereabouts, pardner")
+    payload = Messenger::Bot::Builder.new(42_000_000_000).build_message_with_location_prompt("I need to know your whereabouts, pardner")
 
     obj = JSON.parse(payload)
     obj["message"]["text"].should eq("I need to know your whereabouts, pardner")
