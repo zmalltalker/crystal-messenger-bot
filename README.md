@@ -39,7 +39,7 @@ message through Messenger like this:
 require "messenger-bot"
 access_token = "REALLY_LONG_STRING_HERE"
 recipient_id = 12390123112312
-message = Messenger::Bot::Builder.new.build_text_message(recipient_id, "Hey Marius. I think you're a really nice guy.")
+message = Messenger::Bot::Builder.new(recipient_id).add_text("Hey Marius. I think you're a really nice guy.").build
 api = Messenger::Bot::GraphAPI.new("2.6", access_token)
 recipient_id, message_id = api.deliver_message(message)
 puts "Delivered message #{message_id} to recipient #{recipient_id}"
@@ -70,15 +70,14 @@ callback_link = Messenger::Bot::Link.create("See more", callback:
 "state returned into your bot")
 
 message =
-Messenger::Bot::Builder.new.build_message_with_buttons(recipient_id,
-"Hey Marius. I think you're a really nice guy.", [url_link, callback_link])
+Messenger::Bot::Builder.new(recipient_id).add_text("Hey Marius").add_buttons([url_link, callback_link]).build
 
 api = Messenger::Bot::GraphAPI.new("2.6", access_token)
 recipient_id, message_id = api.deliver_message(message)
 puts "Delivered message with buttons as message #{message_id} to recipient #{recipient_id}"
 ```
 
-To build messages, see `Messenger::Bot::Builder#build_text_message`
+To build messages, see `Messenger::Bot::Builder#build`
 
 ## Incoming message thoughts
 
