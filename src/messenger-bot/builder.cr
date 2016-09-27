@@ -4,6 +4,7 @@ module Messenger
     # Send the resulting messages using `Messenger::Bot::GraphAPI`
     class Builder
       def initialize(@recipient_id : Int64)
+        @buttons = [] of Link
       end
 
 
@@ -13,11 +14,10 @@ module Messenger
         self
       end
 
-      # Add some link buttons to your message. Build a message with
-      # message text *message* and a list *buttons* of `Link` links.
-      # Build links using `Link.create`
-      def add_buttons(buttons : Array(Link))
-        @buttons = buttons
+      # Add a button *button* to the list of buttons to include in the message
+      # Build links using `Link#create`
+      def add_button(button : Link)
+        @buttons << button
         self
       end
 

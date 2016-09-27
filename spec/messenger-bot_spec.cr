@@ -31,7 +31,10 @@ describe Messenger::Bot do
     first_link = Messenger::Bot::Link.create("Read on", callback: "hullo")
     first_link.callback.should eq("hullo")
     second_link = Messenger::Bot::Link.create("Facebook", url: "https://facebook.com")
-    result = Messenger::Bot::Builder.new(42_000_000_000).add_text("Whatever").add_buttons([first_link, second_link]).build
+    result = Messenger::Bot::Builder.new(42_000_000_000).add_text("Whatever")
+             .add_button(first_link)
+             .add_button(second_link)
+             .build
 
     obj = JSON.parse(result)
 
