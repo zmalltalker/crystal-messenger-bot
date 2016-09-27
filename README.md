@@ -59,6 +59,7 @@ url : String)
   callback : String)
 
 Example:
+
 ```crystal
 require "messenger-bot"
 access_token = "REALLY_LONG_STRING_HERE"
@@ -69,10 +70,14 @@ url_link = Messenger::Bot::Link.create("Read on", url:
 callback_link = Messenger::Bot::Link.create("See more", callback:
 "state returned into your bot")
 
-message =
-Messenger::Bot::Builder.new(recipient_id).add_text("Hey Marius").add_buttons([url_link, callback_link]).build
+message = Messenger::Bot::Builder.new(recipient_id)
+  .add_text("Hey Marius")
+  .add_button(url_link)
+  .add_button(callback_link)
+  .build
 
 api = Messenger::Bot::GraphAPI.new("2.6", access_token)
+
 recipient_id, message_id = api.deliver_message(message)
 puts "Delivered message with buttons as message #{message_id} to recipient #{recipient_id}"
 ```
