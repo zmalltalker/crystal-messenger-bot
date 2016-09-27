@@ -27,13 +27,8 @@ module Messenger
         %({"recipient":{"id": #{@recipient_id}}, #{message_payload}})
       end
 
-                         # :nodoc:
-                         def buttons : Array(Link)
-                           @buttons || [] of Link
-                         end
-
       def message_payload
-        if buttons.size == 0
+        if @buttons.size == 0
           %("message": {"text": "#{@message}"})
         else
           %("message": {
@@ -42,7 +37,7 @@ module Messenger
                     "payload": {
                         "template_type": "button",
                         "text": "#{@message}",
-                        "buttons": [#{(buttons.map &.to_json_string).join(",")}]
+                        "buttons": [#{(@buttons.map &.to_json_string).join(",")}]
                     }
                 }
             }
