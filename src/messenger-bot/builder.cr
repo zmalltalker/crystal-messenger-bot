@@ -5,8 +5,8 @@ module Messenger
     class Builder
       def initialize(@recipient_id : Int64)
         @buttons = [] of Link
+        @quick_actions = [] of NamedTuple(title: String, payload: String, content_type: String)
       end
-
 
       # Add message text *text* to the message
       def add_text(text : String)
@@ -21,6 +21,11 @@ module Messenger
         self
       end
 
+      # Adds quick, pre-defined actions which call back into the bot
+      def add_quick_reply(values : NamedTuple(title: String, payload: String))
+        @quick_actions << {title: values[:title], payload: values[:payload], content_type: "text"}
+        self
+      end
 
       # Build a JSON message payload which can be delivered through the Messenger, aka Graph, API
       def build
@@ -28,10 +33,17 @@ module Messenger
       end
 
       def message_payload
+        if @quick_actions.size > 0
+          return %("message": {"text": "#{@message}"
+                                "quick_replies": [#{(@quick_actions.map &.to_json).join(",")}]
+                              }
+
+                  )
+        end
         if @buttons.size == 0
-          %("message": {"text": "#{@message}"})
-        else
-          %("message": {
+          return %("message": {"text": "#{@message}"})
+        end
+        %("message": {
                 "attachment": {
                     "type": "template",
                     "payload": {
@@ -42,13 +54,12 @@ module Messenger
                 }
             }
         )
-        end
       end
 
-          # Build a message to user *recipient_id* with message text *message* and a prompt
-          # for the current user's location
-          def build_message_with_location_prompt(message : String)
-            %({
+      # Build a message to user *recipient_id* with message text *message* and a prompt
+      # for the current user's location
+      def build_message_with_location_prompt(message : String)
+        %({
                 "recipient":{
                                "id":"#{@recipient_id}"
                              },
@@ -60,8 +71,7 @@ module Messenger
                           }
               }
              )
-          end
-
+      end
     end
   end
 end

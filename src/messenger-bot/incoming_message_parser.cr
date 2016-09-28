@@ -1,8 +1,10 @@
 require "json"
+
 module Messenger
   module Bot
     module IncomingMessageParser
       extend self
+
       def process_json_document(json_text)
         json = JSON.parse(json_text)
         body = json["message"]["text"].as_s
@@ -13,6 +15,7 @@ module Messenger
 
     class IncomingTextMessage
       getter :text, :sender_id
+
       def initialize(@text : String, @sender_id : Int64)
       end
     end

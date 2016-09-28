@@ -1,7 +1,6 @@
 module Messenger::Bot
   # A wrapper for Facebook's Graph API
   class GraphAPI
-
     # Build an API instance with which you can send messages.
     # Pass *api_version* (current is 2.6) an *access_token*, which you need to
     # authenticate yourself to the Graph API
