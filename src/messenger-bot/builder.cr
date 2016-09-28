@@ -34,7 +34,7 @@ module Messenger
 
       def message_payload
         if @quick_actions.size > 0
-          return %("message": {"text": "#{@message}"
+          return %("message": {"text": "#{@message}",
                                 "quick_replies": [#{(@quick_actions.map &.to_json).join(",")}]
                               }
 
