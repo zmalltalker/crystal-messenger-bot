@@ -28,7 +28,7 @@ module Messenger
 
       # Adds quick, pre-defined actions which call back into the bot
       def add_quick_reply(values : NamedTuple(title: String, payload: String))
-        @quick_actions << {title: values[:title][0..20], payload: values[:payload], content_type: "text"}
+        @quick_actions << {title: values[:title][0..19], payload: values[:payload], content_type: "text"}
         self
       end
 

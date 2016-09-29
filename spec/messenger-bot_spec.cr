@@ -65,7 +65,7 @@ describe Messenger::Bot do
     builder.add_quick_reply({title: "This text is way more than 20 characters.", payload: "RED_PAYLOAD"})
 
     obj = JSON.parse(builder.build)
-    obj["message"]["quick_replies"][0]["title"].should eq("This text is way more")
+    obj["message"]["quick_replies"][0]["title"].should eq("This text is way mor")
   end
 
   it "builds a 'typing' message" do
