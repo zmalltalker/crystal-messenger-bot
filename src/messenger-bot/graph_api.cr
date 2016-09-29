@@ -28,7 +28,7 @@ module Messenger::Bot
       response = HTTP::Client.get("https://graph.facebook.com/v#{@api_version}/#{user_id}?fields=first_name,last_name&access_token=#{@access_token}",
                                   headers: HTTP::Headers{"Content-Type" => "application/json"})
       result = JSON.parse(response.body)
-      return "#{result['first_name']} #{result['last_name']}"
+      return %(#{result["first_name"]} #{result["last_name"]})
     end
 
     # Notify the user that we're working on a response, and then deliver the
