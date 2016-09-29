@@ -58,4 +58,11 @@ describe Messenger::Bot do
     obj["message"]["quick_replies"][0]["title"].should eq("Red")
     obj["message"]["quick_replies"][0]["payload"].should eq("RED_PAYLOAD")
   end
+
+  it "builds a 'typing' message" do
+    builder = Messenger::Bot::Builder.new(42_000_000_000)
+    payload = builder.build_wait_message
+    result = JSON.parse(payload)
+    result["sender_action"].should eq("typing_on")
+  end
 end

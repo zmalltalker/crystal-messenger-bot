@@ -21,6 +21,11 @@ module Messenger
         self
       end
 
+      # Build a JSON message indicating that we're busy typing
+      def build_wait_message
+        %({"recipient":{"id":#{@recipient_id}}, "sender_action":"typing_on"})
+      end
+
       # Adds quick, pre-defined actions which call back into the bot
       def add_quick_reply(values : NamedTuple(title: String, payload: String))
         @quick_actions << {title: values[:title], payload: values[:payload], content_type: "text"}
