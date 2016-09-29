@@ -24,7 +24,7 @@ module Messenger::Bot
       end
     end
 
-    def user_name(user_id: Int64): String
+    def user_name(user_id : Int64): String
       response = HTTP::Client.get("https://graph.facebook.com/v#{@api_version}/#{user_id}?fields=first_name,last_name&access_token=#{@access_token}",
                                   headers: HTTP::Headers{"Content-Type" => "application/json"})
       result = JSON.parse(response.body)
