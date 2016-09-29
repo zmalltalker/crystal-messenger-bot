@@ -19,6 +19,7 @@ module Messenger::Bot
         return result.recipient_id, result.message_id
       rescue ex
         puts ex.message
+        puts response.body
         return 0, 0
       end
     end
