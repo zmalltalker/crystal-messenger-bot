@@ -3,7 +3,10 @@ module Messenger
     # Build messages to be sent to Messenger users
     # Send the resulting messages using `Messenger::Bot::GraphAPI`
     class Builder
-      def initialize(@recipient_id : Int64)
+      @recipient_id : String
+
+      def initialize(recipient_id)
+        @recipient_id  = recipient_id.to_s
         @buttons = [] of Link
         @quick_actions = [] of NamedTuple(title: String, payload: String, content_type: String)
       end
