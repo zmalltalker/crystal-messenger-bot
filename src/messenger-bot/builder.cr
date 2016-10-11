@@ -25,8 +25,18 @@ module Messenger
       end
 
       # Build a JSON message indicating that we're busy typing
+      #        %({"recipient":{"id":#{@recipient_id}}, "sender_action":"typing_on"})
       def build_wait_message
-        %({"recipient":{"id":#{@recipient_id}}, "sender_action":"typing_on"})
+        String.build do |io|
+          io.json_object do |o|
+            o.field "recipient" do
+              io.json_object { |recipient|
+                recipient.field "id", @recipient_id
+              }
+            end
+            o.field "sender_action", "typing_on"
+          end
+        end
       end
 
       # Adds quick, pre-defined actions which call back into the bot
@@ -38,48 +48,48 @@ module Messenger
       # Build a JSON message payload which can be delivered through the Messenger, aka Graph, API
       def build
         %({"recipient":{"id": #{@recipient_id}}, #{message_payload}})
-      end
+                        end
 
-      def message_payload
-        if @quick_actions.size > 0
-          return %("message": {"text": "#{@message}",
-                                "quick_replies": [#{(@quick_actions.map &.to_json).join(",")}]
-                              }
+                         def message_payload
+                           if @quick_actions.size > 0
+                             return %("message": {"text": "#{@message}",
+                                                  "quick_replies": [#{(@quick_actions.map &.to_json).join(",")}]
+                                                                   }
 
-                  )
-        end
-        if @buttons.size == 0
-          return %("message": {"text": "#{@message}"})
-        end
-        %("message": {
-                "attachment": {
-                    "type": "template",
-                    "payload": {
-                        "template_type": "button",
-                        "text": "#{@message}",
-                        "buttons": [#{(@buttons.map &.to_json_string).join(",")}]
-                    }
-                }
-            }
-        )
-      end
+                                                 )
+                                      end
+                                      if @buttons.size == 0
+                                        return %("message": {"text": "#{@message}"})
+                                      end
+                                      %("message": {
+                                                     "attachment": {
+                                                                     "type": "template",
+                                                                    "payload": {
+                                                                                 "template_type": "button",
+                                                                                "text": "#{@message}",
+                                                                                "buttons": [#{(@buttons.map &.to_json_string).join(",")}]
+                                                                                           }
+                                                                               }
+                                                                   }
+                                                   )
+                                        end
 
-      # Build a message to user *recipient_id* with message text *message* and a prompt
-      # for the current user's location
-      def build_message_with_location_prompt(message : String)
-        %({
-                "recipient":{
-                               "id":"#{@recipient_id}"
-                             },
-               "message":{
-                            "text":"#{message}",
-                          "quick_replies":[
-                                             {"content_type":"location"}
-                                           ]
-                          }
-              }
-             )
-      end
-    end
-  end
-end
+                                        # Build a message to user *recipient_id* with message text *message* and a prompt
+                                        # for the current user's location
+                                        def build_message_with_location_prompt(message : String)
+                                          %({
+                                              "recipient":{
+                                                             "id":"#{@recipient_id}"
+                                                           },
+                                             "message":{
+                                                          "text":"#{message}",
+                                                        "quick_replies":[
+                                                                           {"content_type":"location"}
+                                                                         ]
+                                                        }
+                                            }
+                                           )
+                                        end
+                                        end
+                                        end
+                                        end
