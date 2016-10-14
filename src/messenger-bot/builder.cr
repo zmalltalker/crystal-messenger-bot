@@ -47,71 +47,56 @@ module Messenger
 
       # Build a JSON message payload which can be delivered through the Messenger, aka Graph, API
       def build
-        String
-        "{\"recipient\":{\"id\": #{@recipient_id}}, #{message_payload}}"
+        String.build do |io|
+          io.json_object do |o|
+            o.field "recipient" do
+              io.json_object do |recipient|
+                recipient.field "id", @recipient_id
+              end
+            end
+            message_payload(io, o)
+          end
+        end
       end
 
-      def message_payload
+      def message_payload(io, o)
         if @quick_actions.size > 0
-          result = String.build do |io|
-            io.json_object do |o|
-              o.field "message" do
-                io.json_object do |message|
-                  message.field "text", @message
-                  message.field "quick_replies" do
-                    io.json_array do |array|
-                      @quick_actions.each do |a|
-                        array << a
-                      end
-                    end
+          o.field "message" do
+            io.json_object do |message|
+              message.field "text", @message
+              message.field "quick_replies" do
+                io.json_array do |array|
+                  @quick_actions.each do |a|
+                    array << a
                   end
                 end
               end
             end
+            return
           end
-          return result
         end
         if @buttons.size == 0
-          return String.build do |io|
-            io.json_object do |o|
-              o.field "message" do
-                io.json_object do |message|
-                  message.field "text", @message
-                end
-              end
+          o.field "message" do
+            io.json_object do |message|
+              message.field "text", @message
             end
           end
+          return
         end
-        {"message" : {"attachment" : {"type" : "template", "payload" : {"template_type" : "button", "text" : @message, "buttons" : @buttons.map &.to_tuple}}}}.to_json
-        # %("message": {
-        #                "attachment": {
-        #                                "type": "template",
-        #                               "payload": {
-        #                                            "template_type": "button",
-        #                                           "text": "#{@message}",
-        #                                           "buttons": [#{(@buttons.map &.to_json_string).join(",")}]
-        #                                                      }
-        #                                          }
-        #                              }
-        #              )
-          end
-
-          # Build a message to user *recipient_id* with message text *message* and a prompt
-          # for the current user's location
-          def build_message_with_location_prompt(message : String)
-            return String.build do |io|
-              io.json_object do |o|
-                o.field "recipient" do
-                  io.json_object do |recipient|
-                    recipient.field "id", @recipient_id
-                  end
-                end
-                o.field "message" do
-                  io.json_object do |msg|
-                    msg.field "text", message
-                    msg.field "quick_replies" do
+        o.field "message" do
+          io.json_object do |message|
+            message.field "attachment" do
+              io.json_object do |attachment|
+                attachment.field "type", "payload"
+                attachment.field "payload" do
+                  io.json_object do |payload|
+                    payload.field "template_type", "button"
+                    payload.field "text", @message
+                    payload.field "buttons" do
                       io.json_array do |array|
-                        array << {"content_type" : "location"}
+                        @buttons.each do |button|
+                          array << button.to_tuple
+                        end
                       end
                     end
                   end
@@ -119,6 +104,33 @@ module Messenger
               end
             end
           end
-       end
+        end
+
+      end
+
+      # Build a message to user *recipient_id* with message text *message* and a prompt
+      # for the current user's location
+      def build_message_with_location_prompt(message : String)
+        return String.build do |io|
+          io.json_object do |o|
+            o.field "recipient" do
+              io.json_object do |recipient|
+                recipient.field "id", @recipient_id
+              end
+            end
+            o.field "message" do
+              io.json_object do |msg|
+                msg.field "text", message
+                msg.field "quick_replies" do
+                  io.json_array do |array|
+                    array << {"content_type" : "location"}
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
     end
+  end
 end

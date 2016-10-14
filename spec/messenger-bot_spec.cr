@@ -7,9 +7,8 @@ describe Messenger::Bot do
     builder = Messenger::Bot::Builder.new(recipient_id)
     builder.add_text("Whoa")
 
-    result_text = builder.message_payload
+    result_text = builder.build
     json_object = JSON.parse(result_text)
-#    json_object["recipient"]["id"].should eq(recipient_id)
     json_object["message"]["text"].should eq("Whoa")
   end
 
@@ -33,7 +32,7 @@ describe Messenger::Bot do
     result = Messenger::Bot::Builder.new(42_000_000_000).add_text("Whatever")
              .add_button(first_link)
              .add_button(second_link)
-             .message_payload
+             .build
 
     obj = JSON.parse(result)
 
@@ -54,7 +53,7 @@ describe Messenger::Bot do
     builder.add_text("Hello there")
     builder.add_quick_reply({title: "Red", payload: "RED_PAYLOAD"})
 
-    obj = JSON.parse(builder.message_payload)
+    obj = JSON.parse(builder.build)
     obj["message"]["quick_replies"][0]["title"].should eq("Red")
     obj["message"]["quick_replies"][0]["payload"].should eq("RED_PAYLOAD")
   end
@@ -64,7 +63,7 @@ describe Messenger::Bot do
     builder.add_text("Hello there")
     builder.add_quick_reply({title: "This text is way more than 20 characters.", payload: "RED_PAYLOAD"})
 
-    obj = JSON.parse(builder.message_payload)
+    obj = JSON.parse(builder.build)
     obj["message"]["quick_replies"][0]["title"].should eq("This text is way mor")
   end
 
