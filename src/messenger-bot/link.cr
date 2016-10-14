@@ -22,6 +22,10 @@ module Messenger
       def to_json_string
         raise "Not implemented"
       end
+
+      def to_tuple
+        raise "Not implemented"
+      end
     end
 
     # :nodoc:
@@ -34,6 +38,10 @@ module Messenger
       def to_json_string
         %({"title":"#{@title}", "type":"web_url", "url": "#{@url}"})
       end
+
+      def to_tuple
+        {"title" : @title, "type" : "web_url", "url" : @url}
+      end
     end
 
     # :nodoc:
@@ -45,6 +53,10 @@ module Messenger
 
       def to_json_string
         %({"title":"#{@title}", "type":"postback", "payload":"#{@callback}"})
+      end
+
+      def to_tuple
+        {"title" : @title, "type" : "postback", "payload" : @callback}
       end
     end
   end

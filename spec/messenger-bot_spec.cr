@@ -7,9 +7,9 @@ describe Messenger::Bot do
     builder = Messenger::Bot::Builder.new(recipient_id)
     builder.add_text("Whoa")
 
-    result_text = builder.build
+    result_text = builder.message_payload
     json_object = JSON.parse(result_text)
-    json_object["recipient"]["id"].should eq(recipient_id)
+#    json_object["recipient"]["id"].should eq(recipient_id)
     json_object["message"]["text"].should eq("Whoa")
   end
 
@@ -18,8 +18,8 @@ describe Messenger::Bot do
     access_token = "sikret"
     api = Messenger::Bot::GraphAPI.new("2.6", access_token)
     WebMock.stub(:post, "https://graph.facebook.com/v2.6/me/messages?access_token=#{access_token}")
-           .with(body: message, headers: {"Content-Type" => "application/json"})
-           .to_return(status: 200, body: "{\"recipient_id\":\"42\",\"message_id\":\"mid.1234\"}")
+      .with(body: message, headers: {"Content-Type" => "application/json"})
+      .to_return(status: 200, body: "{\"recipient_id\":\"42\",\"message_id\":\"mid.1234\"}")
 
     recipient_id, message_id = api.deliver_message(message)
     recipient_id.should eq("42")
@@ -31,9 +31,9 @@ describe Messenger::Bot do
     first_link.callback.should eq("hullo")
     second_link = Messenger::Bot::Link.create("Facebook", url: "https://facebook.com")
     result = Messenger::Bot::Builder.new(42_000_000_000).add_text("Whatever")
-                                                        .add_button(first_link)
-                                                        .add_button(second_link)
-                                                        .build
+             .add_button(first_link)
+             .add_button(second_link)
+             .message_payload
 
     obj = JSON.parse(result)
 
@@ -54,7 +54,7 @@ describe Messenger::Bot do
     builder.add_text("Hello there")
     builder.add_quick_reply({title: "Red", payload: "RED_PAYLOAD"})
 
-    obj = JSON.parse(builder.build)
+    obj = JSON.parse(builder.message_payload)
     obj["message"]["quick_replies"][0]["title"].should eq("Red")
     obj["message"]["quick_replies"][0]["payload"].should eq("RED_PAYLOAD")
   end
@@ -64,7 +64,7 @@ describe Messenger::Bot do
     builder.add_text("Hello there")
     builder.add_quick_reply({title: "This text is way more than 20 characters.", payload: "RED_PAYLOAD"})
 
-    obj = JSON.parse(builder.build)
+    obj = JSON.parse(builder.message_payload)
     obj["message"]["quick_replies"][0]["title"].should eq("This text is way mor")
   end
 
