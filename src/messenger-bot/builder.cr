@@ -9,6 +9,7 @@ module Messenger
         @recipient_id  = recipient_id.to_s
         @buttons = [] of Link
         @quick_actions = [] of NamedTuple(title: String, payload: String, content_type: String)
+        @message_type = :text
       end
 
       # Add message text *text* to the message
@@ -20,6 +21,7 @@ module Messenger
       # Add a button *button* to the list of buttons to include in the message
       # Build links using `Link#create`
       def add_button(button : Link)
+        @message_type = :buttons
         @buttons << button
         self
       end
@@ -41,6 +43,7 @@ module Messenger
 
       # Adds quick, pre-defined actions which call back into the bot
       def add_quick_reply(values : NamedTuple(title: String, payload: String))
+        @message_type = :quick_actions
         @quick_actions << {title: values[:title][0..19], payload: values[:payload], content_type: "text"}
         self
       end
@@ -60,29 +63,40 @@ module Messenger
       end
 
       def append_message_payload(io : IO, o : JSON::ObjectBuilder)
-        if @quick_actions.size > 0
-          o.field "message" do
-            io.json_object do |message|
-              message.field "text", @message
-              message.field "quick_replies" do
-                io.json_array do |array|
-                  @quick_actions.each do |a|
-                    array << a
-                  end
+        case @message_type
+        when :quick_actions
+          append_quick_actions(io, o)
+        when :buttons
+          append_buttons(io, o)
+        else # default is text
+          append_text_message(io, o)
+        end
+      end
+
+      def append_quick_actions(io : IO, o : JSON::ObjectBuilder)
+        o.field "message" do
+          io.json_object do |message|
+            message.field "text", @message
+            message.field "quick_replies" do
+              io.json_array do |array|
+                @quick_actions.each do |a|
+                  array << a
                 end
               end
             end
-            return
           end
         end
-        if @buttons.size == 0
-          o.field "message" do
-            io.json_object do |message|
-              message.field "text", @message
-            end
+      end
+
+      def append_text_message(io : IO, o : JSON::ObjectBuilder)
+        o.field "message" do
+          io.json_object do |message|
+            message.field "text", @message
           end
-          return
         end
+      end
+
+      def append_buttons(io : IO, o : JSON::ObjectBuilder)
         o.field "message" do
           io.json_object do |message|
             message.field "attachment" do
@@ -105,7 +119,6 @@ module Messenger
             end
           end
         end
-
       end
 
       # Build a message to user *recipient_id* with message text *message* and a prompt
