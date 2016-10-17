@@ -27,7 +27,6 @@ module Messenger
       end
 
       # Build a JSON message indicating that we're busy typing
-      #        %({"recipient":{"id":#{@recipient_id}}, "sender_action":"typing_on"})
       def build_wait_message
         String.build do |io|
           io.json_object do |o|
@@ -62,6 +61,8 @@ module Messenger
         end
       end
 
+      # :nodoc:
+      # Append message payload based on message type
       def append_message_payload(io : IO, o : JSON::ObjectBuilder)
         case @message_type
         when :quick_actions
@@ -73,6 +74,8 @@ module Messenger
         end
       end
 
+      # :nodoc:
+      # Append quick actions payload
       def append_quick_actions(io : IO, o : JSON::ObjectBuilder)
         o.field "message" do
           io.json_object do |message|
@@ -88,6 +91,8 @@ module Messenger
         end
       end
 
+      # :nodoc:
+      # Append payload for text message
       def append_text_message(io : IO, o : JSON::ObjectBuilder)
         o.field "message" do
           io.json_object do |message|
@@ -96,6 +101,8 @@ module Messenger
         end
       end
 
+      # :nodoc:
+      # Append payload for button type message
       def append_buttons(io : IO, o : JSON::ObjectBuilder)
         o.field "message" do
           io.json_object do |message|
