@@ -23,6 +23,10 @@ module Messenger
         raise "Not implemented"
       end
 
+      def to_json(io : IO)
+        to_tuple.to_json(io)
+      end
+
       def to_tuple
         raise "Not implemented"
       end
