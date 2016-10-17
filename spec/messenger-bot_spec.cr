@@ -78,6 +78,7 @@ describe Messenger::Bot do
     builder = Messenger::Bot::Builder.new("42")
     button = Messenger::Bot::Link.create(title: "Hello", callback: "clicked")
     builder.add_element({title: "Hello world",  item_url: nil, image_url: nil, subtitle: nil, buttons: [button]})
+    builder.add_element({title: "Hello again",  item_url: nil, image_url: nil, subtitle: nil, buttons: nil})
     payload = builder.build
 
     result = JSON.parse(payload)
