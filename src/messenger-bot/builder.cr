@@ -54,12 +54,12 @@ module Messenger
                 recipient.field "id", @recipient_id
               end
             end
-            message_payload(io, o)
+            append_message_payload(io, o)
           end
         end
       end
 
-      def message_payload(io, o)
+      def append_message_payload(io : IO, o : JSON::ObjectBuilder)
         if @quick_actions.size > 0
           o.field "message" do
             io.json_object do |message|
