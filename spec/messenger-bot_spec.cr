@@ -73,4 +73,15 @@ describe Messenger::Bot do
     result = JSON.parse(payload)
     result["sender_action"].should eq("typing_on")
   end
+
+  it "builds messages with several elements" do
+    builder = Messenger::Bot::Builder.new("42")
+    builder.add_element({title: "Hello world",  item_url: nil, image_url: nil, subtitle: nil})
+    payload = builder.build
+
+    result = JSON.parse(payload)
+    result["message"]["attachment"]["type"].should eq("template")
+    result["message"]["attachment"]["payload"]["template_type"].should eq("generic")
+    result["message"]["attachment"]["payload"]["elements"][0]["title"].should eq("Hello world")
+  end
 end

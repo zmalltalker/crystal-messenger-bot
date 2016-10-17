@@ -5,16 +5,25 @@ module Messenger
     class Builder
       @recipient_id : String
 
+      alias ElementType = NamedTuple(title: String, item_url: String|Nil, image_url: String|Nil, subtitle: String|Nil)
+
       def initialize(recipient_id)
         @recipient_id  = recipient_id.to_s
         @buttons = [] of Link
         @quick_actions = [] of NamedTuple(title: String, payload: String, content_type: String)
+        @elements = [] of ElementType
         @message_type = :text
       end
 
       # Add message text *text* to the message
       def add_text(text : String)
         @message = text
+        self
+      end
+
+      def add_element(element : ElementType)
+        @message_type = :generic_template
+        @elements << element
         self
       end
 
@@ -69,8 +78,34 @@ module Messenger
           append_quick_actions(io, o)
         when :buttons
           append_buttons(io, o)
+        when :generic_template
+          append_generic_template(io, o)
         else # default is text
           append_text_message(io, o)
+        end
+      end
+
+      def append_generic_template(io : IO, o : JSON::ObjectBuilder)
+        o.field "message" do
+          io.json_object do |message|
+            message.field "attachment" do
+              io.json_object do |attachment|
+                attachment.field "type", "template"
+                attachment.field "payload" do
+                  io.json_object do |payload|
+                    payload.field "template_type", "generic"
+                    payload.field "elements" do
+                      io.json_array do |elements|
+                        @elements.each do |element|
+                          elements << element
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
         end
       end
 
