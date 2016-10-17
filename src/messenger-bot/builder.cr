@@ -5,7 +5,7 @@ module Messenger
     class Builder
       @recipient_id : String
 
-      alias ElementType = NamedTuple(title: String, item_url: String|Nil, image_url: String|Nil, subtitle: String|Nil)
+      alias ElementType = NamedTuple(title: String, item_url: String|Nil, image_url: String|Nil, subtitle: String|Nil, buttons: Array(CallbackLink))
 
       def initialize(recipient_id)
         @recipient_id  = recipient_id.to_s
