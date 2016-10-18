@@ -77,7 +77,7 @@ describe Messenger::Bot do
   it "builds messages with several elements" do
     builder = Messenger::Bot::Builder.new("42")
     button = Messenger::Bot::Link.create(title: "Hello", callback: "clicked")
-    builder.add_element({title: "Hello world",  item_url: nil, image_url: nil, subtitle: nil, buttons: [button]})
+    builder.add_element({title: "Hello world",  item_url: nil, image_url: nil, subtitle: nil, buttons: [button] of Messenger::Bot::Link})
     builder.add_element({title: "Hello again",  item_url: nil, image_url: nil, subtitle: nil, buttons: nil})
     payload = builder.build
 
