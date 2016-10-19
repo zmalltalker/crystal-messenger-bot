@@ -2,6 +2,8 @@
     "object": "page",
     "entry":[
         {
+            "messaging": [
+                {
             "sender":{
                 "id":42
             },
@@ -17,6 +19,8 @@
                     "payload": "DEVELOPER_DEFINED_PAYLOAD"
                 }
             }
+                }
+            ]
         }
     ]
 }
