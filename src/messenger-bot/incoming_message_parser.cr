@@ -7,9 +7,11 @@ module Messenger
 
       def process_json_document(json_text)
         json = JSON.parse(json_text)
-        body = json["message"]["text"].as_s
-        sender_id = json["sender"]["id"].as_i64
-        IncomingTextMessage.new(body, sender_id)
+        json["entry"].map do |entry|
+          body = entry["message"]["text"].as_s
+          sender_id = entry["sender"]["id"].as_i64
+          IncomingTextMessage.new(body, sender_id)
+        end
       end
     end
 
