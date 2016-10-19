@@ -5,7 +5,7 @@
             "messaging": [
                 {
             "sender":{
-                "id":42
+                "id":"42"
             },
             "recipient":{
                 "id":"PAGE_ID"

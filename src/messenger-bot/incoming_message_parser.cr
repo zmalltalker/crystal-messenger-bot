@@ -11,7 +11,7 @@ module Messenger
         json["entry"].each do |entry|
           entry["messaging"].each do |message|
             body = message["message"]["text"].as_s
-            sender_id = message["sender"]["id"].as_i64
+            sender_id = message["sender"]["id"].as_s
             result << IncomingTextMessage.new(body, sender_id)
           end
         end
@@ -22,7 +22,7 @@ module Messenger
     class IncomingTextMessage
       getter :text, :sender_id
 
-      def initialize(@text : String, @sender_id : Int64)
+      def initialize(@text : String, @sender_id : String)
       end
     end
   end
