@@ -1,0 +1,23 @@
+{
+  "entry": [
+    {
+      "messaging": [
+        {
+          "postback": {
+            "payload": "SIKRET_PAYLOAD"
+          },
+          "sender": {
+            "id": "42"
+          },
+          "timestamp": 1477381738307,
+          "recipient": {
+            "id": "44"
+          }
+        }
+      ],
+      "time": 1477381738307,
+      "id": "422"
+    }
+  ],
+  "object": "page"
+}

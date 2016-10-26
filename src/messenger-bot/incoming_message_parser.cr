@@ -7,20 +7,40 @@ module Messenger
 
       def process_json_document(json_text)
         json = JSON.parse(json_text)
-        result = [] of IncomingTextMessage
+        result = [] of IncomingMessage
         json["entry"].each do |entry|
           entry["messaging"].each do |message|
-            body = message["message"]["text"].as_s
-            sender_id = message["sender"]["id"].as_s
-            result << IncomingTextMessage.new(body, sender_id)
+            result << parse(message)
           end
         end
         result
       end
+
+      def parse(message)
+        sender_id = message["sender"]["id"].as_s
+        if message["message"]?
+          body = message["message"]["text"].as_s
+          IncomingTextMessage.new(body, sender_id)
+        else
+          payload = message["postback"]["payload"].as_s
+          IncomingPayload.new(payload, sender_id)
+        end
+      end
     end
 
-    class IncomingTextMessage
-      getter :text, :sender_id
+    class IncomingMessage
+      @sender_id : String?
+      getter :sender_id
+    end
+
+    class IncomingPayload < IncomingMessage
+      getter :payload
+      def initialize(@payload : String, @sender_id : String)
+      end
+    end
+
+    class IncomingTextMessage < IncomingMessage
+      getter :text
 
       def initialize(@text : String, @sender_id : String)
       end
