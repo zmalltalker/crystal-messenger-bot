@@ -8,11 +8,14 @@ module Messenger
       # Both will be displayed as links in messenger with *title* as link text,
       # but links with *callback* will link back to the both with this payload while
       # links with *url*  will link to a website.
+      # For Share links, pass "Share" as title and discard all other parameters
       def self.create(title : String, url : String = nil, callback : String = nil)
         if url
           URLLink.new(title, url)
         elsif callback
           CallbackLink.new(title, callback)
+        elsif title == "Share"
+          ShareLink.new
         else
           raise "Need either callback or url"
         end
@@ -32,6 +35,12 @@ module Messenger
       end
     end
 
+    class ShareLink < Link
+      def to_tuple
+        {"type" : "element_share"}
+      end
+    end
+
     # :nodoc:
     class URLLink < Link
       getter :title, :url
@@ -47,6 +56,7 @@ module Messenger
         {"title" : @title, "type" : "web_url", "url" : @url}
       end
     end
+
 
     # :nodoc:
     class CallbackLink < Link

@@ -26,19 +26,25 @@ describe Messenger::Bot do
   end
 
   it "builds a message with links" do
-    first_link = Messenger::Bot::Link.create("Read on", callback: "hullo")
+    first_link = Messenger::Bot::Link.create("Read on", callback: "hullo").as(Messenger::Bot::CallbackLink)
     first_link.callback.should eq("hullo")
     second_link = Messenger::Bot::Link.create("Facebook", url: "https://facebook.com")
+    third_link = Messenger::Bot::Link.create("Share")
     result = Messenger::Bot::Builder.new(42_000_000_000).add_text("Whatever")
              .add_button(first_link)
              .add_button(second_link)
+             .add_button(third_link)
              .build
 
     obj = JSON.parse(result)
 
     first_button = obj["message"]["attachment"]["payload"]["buttons"][0]
     first_button["payload"].should eq("hullo")
+
+    third_link = obj["message"]["attachment"]["payload"]["buttons"][2]
+    third_link["type"].should eq("element_share")
   end
+
 
   it "builds a message with a location prompt" do
     payload = Messenger::Bot::Builder.new(42_000_000_000).build_message_with_location_prompt("I need to know your whereabouts, pardner")
